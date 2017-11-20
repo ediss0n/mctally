@@ -1,0 +1,35 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 10s linear;
+  height: 80px;
+}
+
+.App-header {
+  height: 150px;
+  padding: 20px;
+}
+
+.App-header h2 {
+  font-family: 'Dosis', sans-serif;
+}
+
+.App-intro {
+  font-size: medium;
+  font-family: Sans-Serif;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.cam-slot {
+  padding-top: 10px;
+}
+
+.cam-head {
+  cursor: hand;
+}

@@ -45,15 +45,24 @@ class Camera extends Component {
   */
   listenChange(snapshot) {
     let cur_status = parseInt(snapshot.val().status, 10);
+    let cur_shot = (cur_status === 0) ? this.state.shots[this.props.lang][snapshot.val().shot] : texts.changing[this.props.lang];
     this.setState({
       currentStatus: cur_status,
-      currentShot: (cur_status === 0) ? this.state.shots[this.props.lang][snapshot.val().shot] : texts.changing[this.props.lang],
+      currentShot: cur_shot,
       currentShotId: snapshot.val().shot
     });
     // It might be very useful excepting iOS :( 
     if ("vibrate" in navigator) {
       navigator.vibrate(500);
     }  
+    // Let's talk
+    //this.props.dictor.say(this.props.name + ' ' + cur_shot);
+    this.props.dictor.build(
+      this.props.num, 
+      snapshot.val().shot, 
+      cur_status, 
+      this.state.shots
+    );
   }
   
   /**
@@ -70,6 +79,7 @@ class Camera extends Component {
       shot: parseInt(e.target.href.split('_')[1], 10),
       status: (this.state.currentStatus + 1) % 2
     });
+    e.preventDefault();
   }
   
   /**

@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import Camera from './Camera';
 import LangText from './Lang';
+import Speak from './Speak';
 
 class Table extends Component {
   constructor(props) {
@@ -18,10 +19,12 @@ class Table extends Component {
     this.state = { 
       role: props.role,  
       cameras: {
-        eng: ["Director", "1st camera", "2nd camera", "3rd camera"],
+        eng: ["Director", "First camera", "Second camera", "Third camera"],
         rus: ["Режиссер", "Первая камера", "Вторая камера", "Третья камера"]
       }
     };
+    // One for all cameras
+    this.dictor = new Speak(props.lang, this.state.cameras);
   }  
   
   /**
@@ -39,7 +42,8 @@ class Table extends Component {
               db={this.props.db} 
               role={this.props.role} 
               num={parseInt(this.state.role, 10)} 
-              lang={this.props.lang}  />
+              lang={this.props.lang}
+              dictor={this.dictor} />
           </div> : ''      
           }
           {this.state.cameras[this.props.lang].map((cam, idx) => 
@@ -51,7 +55,8 @@ class Table extends Component {
                 db={this.props.db} 
                 num={idx} 
                 role={this.props.role} 
-                lang={this.props.lang} />
+                lang={this.props.lang}
+                dictor={this.dictor} />
             </div> : ''  
           )}
         </div>

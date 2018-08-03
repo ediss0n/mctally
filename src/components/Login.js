@@ -4,8 +4,19 @@
 * @author eduard.genzora
 */
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import logo from '../logo.svg';
 import LangText from './Lang';
+import { submitLogin } from '../actions';
+import { createSession, enterSession } from '../functions';
+
+// Props mapping
+function linkProps(state) {
+  return {
+    lang: state.lang,
+    role: state.role
+  };
+}
 
 class Login extends Component {
   constructor(props) {
@@ -13,8 +24,8 @@ class Login extends Component {
     this.state = {
       email: '',
       pass: '',
-      role: 1,
-      lang: localStorage.getItem('mc_lang') || 'eng'
+      role: this.props.role,
+      lang: this.props.lang
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -22,7 +33,7 @@ class Login extends Component {
   }  
   
   /**
-  * Controlled input case
+  * Controlled input 
   */
   handleInputChange(event) {
     this.setState({
@@ -36,8 +47,21 @@ class Login extends Component {
       localStorage.setItem('mc_role',this.state.role);   
       localStorage.setItem('mc_lang',this.state.lang); 
     }
-    // it's a parent's trouble
-    this.props[event.target.name + '_handle'](this.state);
+    
+    // with redux we must handle it there
+    if (event.target.name === 'create') {
+      createSession(this.state); }
+    else { 
+      enterSession(this.state);
+    }
+    
+    this.setState({ role: parseInt(this.state.role, 10)});
+    
+    // to update paret store, genering action
+    this.props.dispatch(submitLogin({
+      ...this.state
+    }));
+
     event.preventDefault();
   }  
   
@@ -51,7 +75,7 @@ class Login extends Component {
             <h2>Multicam Tally</h2>
           </div>
           <p className="App-intro">
-            <LangText str="login_text" lang={this.state.lang} />
+            <LangText str="login_text"/>
           </p>
         </div>      
         <form>
@@ -63,24 +87,24 @@ class Login extends Component {
           </div>
       
           <div className="form-group">
-            <label><LangText str="password" lang={this.state.lang} /></label>
+            <label><LangText str="password"/></label>
             <input type="password" name="pass" className="form-control" 
                    id="passInp" placeholder="Password" 
                    value={this.state.pass} onChange={this.handleInputChange} />
           </div>
       
           <div className="form-group">
-            <label><LangText str="role" lang={this.state.lang} /></label>
+            <label><LangText str="role"/></label>
             <select className="form-control" id="roleSel" name="role" value={this.state.role} onChange={this.handleInputChange}>
-              <option value="1"><LangText str="cam1" lang={this.state.lang} /></option>
-              <option value="2"><LangText str="cam2" lang={this.state.lang} /></option>
-              <option value="3"><LangText str="cam3" lang={this.state.lang} /></option>
-              <option value="0"><LangText str="director" lang={this.state.lang} /></option>
+              <option value="1"><LangText str="cam1"/></option>
+              <option value="2"><LangText str="cam2"/></option>
+              <option value="3"><LangText str="cam3"/></option>
+              <option value="0"><LangText str="director"/></option>
             </select>
           </div>      
       
           <div className="form-group">
-            <label><LangText str="language" lang={this.state.lang} /></label>
+            <label><LangText str="language"/></label>
             <select className="form-control" id="langSel" name="lang" value={this.state.lang} onChange={this.handleInputChange}>
               <option value="eng">English</option>
               <option value="rus">Русский</option>
@@ -90,12 +114,12 @@ class Login extends Component {
           <div className="row">
             <div className="col d-flex flex-row">
               <button name="create" className="btn btn-success" onClick={this.handleSubmit}>
-                <LangText str="create_ses" lang={this.state.lang} />
+                <LangText str="create_ses"/>
               </button>
             </div>      
             <div className="col d-flex flex-row-reverse">
               <button name="enter" className="btn btn-primary" onClick={this.handleSubmit}>
-                <LangText str="enter_ses" lang={this.state.lang} />
+                <LangText str="enter_ses"/>
               </button>
             </div>
           </div>
@@ -105,4 +129,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(linkProps)(Login);

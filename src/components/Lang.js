@@ -6,7 +6,16 @@
 * @author eduard.genzora
 */
 import { Component } from 'react';
-import texts from './i18n';
+import { connect } from 'react-redux';
+import texts from '../i18n';
+
+
+// Props mapping
+function linkProps(state) {
+  return {
+    lang: state.lang
+  };
+}
 
 class LangText extends Component {
   constructor(props) {
@@ -20,4 +29,4 @@ class LangText extends Component {
     
 }
 
-export default LangText;
+export default connect(linkProps)(LangText);
